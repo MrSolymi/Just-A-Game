@@ -28,4 +28,13 @@ public class PlayerData : ScriptableObject
     [Header("Ledge Climb State")]
     public Vector2 startOffSet;
     public Vector2 stopOffSet;
+    [Header("Dash State")]
+    public float dashCoolDown = 1.0f;
+    public float maxHoldTime = 1.0f;
+    public float holdTimeScale = 0.25f;
+    public float dashTime = 0.2f;
+    public float dashVelocity = 30.0f;
+    public float drag = 10.0f;
+    public float dashEndYMultiplier = 0.2f;
+    public float distanceBetweenAfterImages = 0.5f;
 }

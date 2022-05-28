@@ -9,9 +9,6 @@ public class Player : MonoBehaviour
     public PlayerStateMachine StateMachine { get; private set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
-    public Animator Anim { get; private set; }
-    public PlayerInputHandler InputHandler { get; private set; }
-    public Rigidbody2D RB { get; private set; }
     public PlayerJumpState JumpState { get; private set; }
     public PlayerInAirState InAirState { get; private set; }
     public PlayerLandState LandState { get; private set; }
@@ -20,9 +17,14 @@ public class Player : MonoBehaviour
     public PlayerWallClimbState WallClimbState { get; private set; }
     public PlayerWallJumpState WallJumpState { get; private set; }
     public PlayerLedgeClimbState LedgeClimbState { get; private set; }
+    public PlayerDashState DashState { get; private set; }
     #endregion
 
+    public Animator Anim { get; private set; }
+    public PlayerInputHandler InputHandler { get; private set; }
+    public Rigidbody2D RB { get; private set; }
     public Vector2 CurrentVelocity { get; private set; }
+    public Transform DashDirectionIndicator { get; private set; }
     public int FacingDirection { get; private set; }
 
     [SerializeField]
@@ -50,12 +52,14 @@ public class Player : MonoBehaviour
         WallClimbState = new PlayerWallClimbState(this, StateMachine, playerData, "wallClimb");
         WallJumpState = new PlayerWallJumpState(this, StateMachine, playerData, "inAir");
         LedgeClimbState = new PlayerLedgeClimbState(this, StateMachine, playerData, "ledgeClimbState");
+        DashState = new PlayerDashState(this, StateMachine, playerData, "inAir");
     }
     private void Start()
     {
         Anim = GetComponent<Animator>();
         InputHandler = GetComponent<PlayerInputHandler>();
         RB = GetComponent<Rigidbody2D>();
+        DashDirectionIndicator = transform.Find("DashDirectionIndicator");
 
         FacingDirection = 1;
         StateMachine.Initalize(IdleState);
@@ -93,6 +97,12 @@ public class Player : MonoBehaviour
     {
         angle.Normalize();
         workspace.Set(angle.x * velocity * direction, angle.y * velocity);
+        RB.velocity = workspace;
+        CurrentVelocity = workspace;
+    }
+    public void SetVelocity(float velocity, Vector2 direction)
+    {
+        workspace = direction * velocity;
         RB.velocity = workspace;
         CurrentVelocity = workspace;
     }
