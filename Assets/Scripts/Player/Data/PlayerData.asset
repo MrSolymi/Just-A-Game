@@ -19,11 +19,13 @@ MonoBehaviour:
   whatIsGround:
     serializedVersion: 2
     m_Bits: 256
-  wallCheckDistance: 0.45
+  wallCheckDistance: 0.6
   coyoteTime: 0.1
   variableJumpHeightMultiplier: 0.5
   wallSlideVelocity: 2
   wallClimbVelocity: 3
   wallJumpVelocity: 20
-  wallJumpTime: 0.4
+  wallJumpTime: 0.3
   wallJumpAngle: {x: 1, y: 2}
+  startOffSet: {x: 0.39, y: 1}
+  stopOffSet: {x: 0.4, y: 0.75}
