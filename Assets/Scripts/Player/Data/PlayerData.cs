@@ -37,4 +37,8 @@ public class PlayerData : ScriptableObject
     public float drag = 10.0f;
     public float dashEndYMultiplier = 0.2f;
     public float distanceBetweenAfterImages = 0.5f;
+    [Header("Crouch States")]
+    public float crouchMovementVelocity = 5.0f;
+    public float crouchColliderHeight = 0.8f;
+    public float standColliderHeight = 1.6f;
 }
