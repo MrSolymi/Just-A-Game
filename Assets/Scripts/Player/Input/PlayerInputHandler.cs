@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 
 public class PlayerInputHandler : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class PlayerInputHandler : MonoBehaviour
     public bool GrabInput { get; private set; }
     public bool DashInput { get; private set; }
     public bool DashInputStop { get; private set; }
+    public bool[] AttackInputs { get; private set; }
+
     
     [SerializeField]
     private float inputHoldTime = 0.2f;
@@ -28,31 +31,41 @@ public class PlayerInputHandler : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();
         cam = Camera.main;
+        int count = Enum.GetValues(typeof(CombatInputs)).Length;
+        AttackInputs = new bool[count];
     }
     private void Update()
     {
         CheckJumpInputHoldTime();
         CheckDashInputHoldTime();
     }
+    public void OnPrimaryAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            AttackInputs[(int)CombatInputs.primary] = true;
+        }
+        if (context.canceled)
+        {
+            AttackInputs[(int)CombatInputs.primary] = false;
+        }
+    }
+    public void OnSecondaryAttackInput(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            AttackInputs[(int)CombatInputs.secondary] = true;
+        }
+        if (context.canceled)
+        {
+            AttackInputs[(int)CombatInputs.secondary] = false;
+        }
+    }
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         RawMovementIntput = context.ReadValue<Vector2>();
-        if (Mathf.Abs(RawMovementIntput.x) > 0.5f)
-        {
-            NormInputX = (int)(RawMovementIntput * Vector2.right).normalized.x;
-        }
-        else
-        {
-            NormInputX = 0;
-        }
-        if (Mathf.Abs(RawMovementIntput.y) > 0.5f)
-        {
-            NormInputY = (int)(RawMovementIntput * Vector2.up).normalized.y;
-        }
-        else
-        {
-            NormInputY = 0;
-        }
+        NormInputX = Mathf.RoundToInt(RawMovementIntput.x);
+        NormInputY = Mathf.RoundToInt(RawMovementIntput.y);
     }
     public void OnDashInput(InputAction.CallbackContext contex)
     {
@@ -117,4 +130,8 @@ public class PlayerInputHandler : MonoBehaviour
             DashInput = false;
         }
     }
+}
+public enum CombatInputs
+{
+    primary, secondary
 }
